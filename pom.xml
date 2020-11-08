@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.tianque.doraemon</groupId>
+  <artifactId>behavior-verification</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <modules>
+    <module>bv-common</module>
+    <module>bv-service</module>
+  </modules>
+  <packaging>pom</packaging>
+
+  <properties>
+    <doraemon.version>1.4.0.RELEASE</doraemon.version>
+    <ehavior.verification.version>0.0.1-SNAPSHOT</ehavior.verification.version>
+
+    <java.version>1.8</java.version>
+    <maven.plugin.version>3.8.1</maven.plugin.version>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- spring -->
+    <spring.boot.version>2.1.12.RELEASE</spring.boot.version>
+    <spring.cloud.version>Greenwich.SR5</spring.cloud.version>
+    <spring.platform.version>Cairo-SR8</spring.platform.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring.boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring.cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.spring.platform</groupId>
+        <artifactId>platform-bom</artifactId>
+        <version>${spring.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.tianque.doraemon</groupId>
+        <artifactId>doraemon-cloud-dependencies</artifactId>
+        <version>${doraemon.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring.boot.version}</version>
+          <configuration>
+            <fork>true</fork>
+            <finalName>${project.build.finalName}</finalName>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <encoding>UTF-8</encoding>
+          <compilerArgs>
+            <arg>-parameters</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- 开发环境默认 -->
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <profile.active>dev</profile.active>
+      </properties>
+    </profile>
+
+    <!-- 生产环境 -->
+    <profile>
+      <id>prod</id>
+      <properties>
+        <profile.active>prod</profile.active>
+      </properties>
+    </profile>
+
+    <!-- 测试环境 -->
+    <profile>
+      <id>test</id>
+      <properties>
+        <profile.active>test</profile.active>
+      </properties>
+    </profile>
+  </profiles>
+
+  <!-- 使用分发管理将本项目打成jar包，直接上传到指定服务器 -->
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <layout>default</layout>
+      <url>http://nexus.daliandong.cn/nexus/content/repositories/releases/</url>
+    </repository>
+
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>snapshots</name>
+      <url>http://nexus.daliandong.cn/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <!-- 自建私服 -->
+  <repositories>
+    <repository>
+      <id>nexus</id>
+      <name>Nexus Repository</name>
+      <layout>default</layout>
+      <url>http://nexus.daliandong.cn/nexus/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <!-- 插件得私服 -->
+  <pluginRepositories>
+    <pluginRepository>
+      <id>aliyun-plugin</id>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>
