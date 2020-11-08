@@ -4,7 +4,7 @@
 
 开发环境启动
 ```java
-java -Dspring.profiles.active=dev -jar uc-proxy-service.jar
+java -Dspring.profiles.active=dev -jar bv-service.jar
 ```
 
 
